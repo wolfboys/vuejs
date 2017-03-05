@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="libs/vue.js"></script>
+  <title>Class与Style绑定</title>
+  <style type="text/css">
+    .classA {
+      /*红色字体*/
+      color: red;
+    }
+
+    .classB {
+      /*斜体*/
+      font-style: italic;
+    }
+
+    .classC {
+      /*蓝紫色字体*/
+      color: blueviolet;
+    }
+
+    .classD {
+      /*添加padding、margin*/
+      margin: 5px;
+      padding: 5px;
+    }
+
+    .classE {
+      /*边框*/
+      border: 1px solid saddlebrown;
+    }
+
+    .classF {
+      /*背景色*/
+      background-color: lightgoldenrodyellow;
+    }
+
+    .drTransform {
+      transform: rotate(7deg);
+      -ms-transform: rotate(7deg);
+      /* IE 9 */
+      -moz-transform: rotate(7deg);
+      /* Firefox */
+      -webkit-transform: rotate(7deg);
+      /* Safari 和 Chrome */
+      -o-transform: rotate(7deg);
+      transition-duration: 5s;
+    }
+  </style>
+</head>
+
+<body>
+<h2>绑定Html Class</h2>
+<p>尽管可以用 Mustache 标签绑定 class，比如 class="{{ className }}"，但是不推荐这种写法和 :class 混用。两者只能选其一！</p>
+<div id="dr01">
+  <h4>#对象语法</h4>
+  <p>给:class一个对象，通过true、false动态切换class，isA为false，true，所以div的class为static、classB</p>
+  <!-- 下面是两种方式，一种直接在:class里面展示对象，另外一种，在data里面添加classObj属性，在:class里面赋值classObj对象 -->
+  <div :class="{static:isStatic,classA:isA,classB:isB}">1、对象语法class test</div>
+  <div :class="classObj">2、对象语法another class attribute bind</div>
+</div>
+
+<hr />
+
+<div id="dr02">
+  <h4>#数组语法</h4>
+  <div :class='["classC","classD","classE","classF"]'>1、数组语法，直接添加"className"，不能动态更改，与class="classC classD classE classF"保持一致</div>
+  <div :class='["classC","classD",isE?"classE":"","classF"]'>1、数组语法，直接添加"className"，里面使用了三元表达式</div>
+  <div :class='[drClassC,drClassD,drClassE,drClassF]'>2、数组语法，数组的元素在data里面有定义，挨个赋值className</div>
+  <div :class='[drClassC,drClassD,drClassE,isF?drClassF:""]'>3、数组语法，里面使用了三元表达式</div>
+  <hr />
+
+  <h4>#对象语法、数组语法混合使用</h4>
+  <div>
+    <p>在 1.0.19+ 中，可以在数组语法中使用对象语法：{{cHtml}}</p>
+    <span>classA: data定义（三元表达式）, classB:直接引用（三元表达式），classC:data引用，classD：直接引用，EFGH是对象属性，所以不论属性名称是否有引号，只要属性值在data里面定义的是true，引用的都是属性名，false不引用</span>
+    <div :class='[isA?drClassA:"",isB?"classB":"",drClassC,"classD",{"classE":isE,drClassF:isF,"classG":isG,drClassH:isH}]'>
+      class属性综合测试
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<h2>绑定内联样式</h2>
+<div id="dr03">
+  <h4>#对象语法</h4>
+  <div :style="{color:activeColor,fontSize:activeFontSize}">1、对象语法简单测试</div>
+  <div :style="styleObj">2、对象语法（在data下定义）</div>
+</div>
+<div id="dr04">
+  <h4>#数组语法</h4>
+  <div :style="[{color:'blue',fontSize:'15px'},{fontStyle:'italic',backgroundColor:'lightgoldenrodyellow'}]">2、数组语法简单测试</div>
+  <div :style="[styleObj01,styleObj02]">2、数组语法简单测试</div>
+</div>
+<script>
+  var dr01 = new Vue({
+    el: "#dr01",
+    data: {
+      isStatic: true,
+      isA: true,
+      isB: true,
+      classObj: {
+        static: true,
+        classA: true,
+        classB: true,
+      }
+    }
+  });
+  var dr02 = new Vue({
+    el: "#dr02",
+    data: {
+      isA: true,
+      isB: true,
+      isE: true,
+      isF: true,
+      isG: true,
+      isH: true,
+      drClassA: "classA",
+      drClassB: "classB",
+      drClassC: "classC",
+      drClassD: "classD",
+      drClassE: "classE",
+      drClassF: "classF",
+      drClassG: "classG",
+      drClassH: "classH",
+      cHtml: '<div :class="[classA, { classB: isB, classC: isC }]">'
+    }
+  });
+  var dr03 = new Vue({
+    el: "#dr03",
+    data: {
+      activeColor: "#ff0000",
+      activeFontSize: "20px",
+      styleObj: {
+        color: "red",
+        fontSize: "20px"
+      }
+    }
+  });
+  var dr04 = new Vue({
+    el: "#dr04",
+    data: {
+      styleObj01: {
+        color: "blue",
+        fontSize: "15px"
+      },
+      styleObj02: {
+        fontStyle: "italic",
+        backgroundColor: "lightgoldenrodyellow"
+      }
+    }
+  });
+</script>
+</body>
+
+</html>

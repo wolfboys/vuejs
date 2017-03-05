@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="libs/vue.js"></script>
+</head>
+
+<body>
+<div id="app">
+  <!-- v-on:submit 和@sumbit效果一样,v-on: 可以直接替换成@ -->
+  <form action="submit.html" method="post" @submit.stop="submitForm">
+    <!--会自动判断message是否为false,false则显示提示信心-->
+    <div :style="tip" v-if="!message">{{notNull}}</div>
+    <!--双向绑定textarea文本输入-->
+    <textarea :class="input" v-model="message">{{message}}</textarea>
+    <button>提交</button>
+  </form>
+  <button @click="count+=1">提交{{count}}</button>
+  <pre>
+    {{data}}
+  </pre>
+</div>
+
+<script type="text/javascript">
+  new Vue({
+    el: "#app",
+    data:
+    {
+      message:"",
+      count:1,
+      notNull: "要提交的内容不能为空,请输入内容再提交",
+      tip:{
+        fontSize:"14px",
+        fontWeight:400,
+        color:"RED"
+      },
+      input:"textarea"
+    },
+    methods:{
+      submitForm:function (e) {
+        if(!this.message){
+          alert(this.notNull);
+        }
+      }
+    }
+  });
+</script>
+
+<style>
+  .tip{
+    color: RED;
+  }
+  .textarea{
+    width: 400px;
+    height: 200px;
+  }
+</style>
+
+</body>
+
+</html>

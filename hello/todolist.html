@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:script="http://www.w3.org/1999/html">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="libs/bootstrap.css">
+  <script src="libs/vue.js"></script>
+  <script src="libs/axios.js"></script>
+  <script src="libs/jquery.min.js"></script>
+  <script src="libs/bootstrap.js"></script>
+</head>
+
+<body>
+<div id="app">
+  <div class="container">
+    <form role="form" @submit.prevent="submit">
+      <div class="form-group">
+        <label for="username">用户名</label>
+        <input class="form-control" type="text" id="username" v-model="username" placeholder="请输入用户名">
+      </div>
+      <div class="form-group">
+        <label for="age">年龄</label>
+        <input class="form-control" type="text" id="age" v-model="age" placeholder="请输入年龄">
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary btn-sm" @click="add">提交数据</button>
+        <button class="btn btn-danger btn-sm" @click="clean">重置</button>
+      </div>
+    </form>
+
+    <hr>
+
+    <table class="table table-bordered table-hover text-center">
+      <tr v-if="myData.length">
+        <td>序号</td>
+        <td>用户名</td>
+        <td>年龄</td>
+        <td>操作</td>
+      </tr>
+
+      <tr v-for="(item,index) in myData">
+        <td>{{index}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.age}}</td>
+        <td>
+          <button class="btn btn-primary btn-sm" >编辑</button> &nbsp;&nbsp;
+          <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#layer" @click="optionId=index" >删除</button>
+        </td>
+      </tr>
+
+      <tr v-if="myData.length">
+        <td colspan="4">
+          <button class="btn btn-danger btn-block" @click="optionId=-1" data-toggle="modal" data-target="#layer">删除全部</button>
+        </td>
+      </tr>
+
+      <tr v-if="!myData.length">
+        <td colspan="4">暂无数据...</td>
+      </tr>
+    </table>
+    <div role="dialog" class="modal" id="layer">
+
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">确定要删除<span v-if="optionId==-1">全部</span>吗?</h4>
+          </div>
+          <div class="modal-body text-left">
+            <button data-dismiss="modal" class="btn btn-primary btn-sm">取消</button>
+            <button data-dismiss="modal" class="btn btn-danger btn-sm" @click="del()">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  new Vue({
+    el:"#app",
+    data:{
+      username:"",
+      age:"",
+      optionId:null,
+      myData: [
+          {id:1,name:"benjobs",age:28},
+          {id:2,name:"dandan",age:26},
+          {id:3,name:"huajun",age:25},
+          {id:4,name:"jan",age:28}
+      ]
+
+    },
+    methods:{
+      add:function (e) {
+        if (this.username==""||this.username.length==0){
+          alert("请输入用户名");
+          return;
+        }
+        if (this.age==""||this.username.age==0){
+          alert("请输入年龄");
+          return;
+        }else {
+          if (isNaN(this.age)){
+            alert("请输入正确的年龄");
+            this.age="";
+            return;
+          }else {
+            var age = parseInt(this.age);
+            if (age<1 || age>150) {
+              alert("请输入正确的年龄");
+              this.age="";
+              return;
+            }
+          }
+        }
+        this.myData.push({
+          id:this.myData.length+1,
+          name:this.username,
+          age:this.age
+        });
+        this.username="";
+        this.age="";
+      },
+      clean:function () {
+        this.username="";
+        this.age = "";
+      },
+      submit:function (e) {
+      },
+      del : function () {
+        if (this.optionId==-1){
+          this.myData = [];
+        }else {
+          this.myData.splice(this.optionId,1);
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+
+</html>

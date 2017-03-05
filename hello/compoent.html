@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="libs/vue.js"></script>
+</head>
+
+<body>
+
+    <!--<div id="rootApp">
+        <div id="app">
+            <global></global>
+            <subcompo></subcompo>
+        </div>
+        <global></global>
+        <subcompo></subcompo>
+    </div>
+
+   <div id="app1">
+        <input type="button" @click="ddd='compoA'" value="A组件" >
+        <input type="button" @click="ddd='compoB'" value="B组件" >
+      &lt;!&ndash; 动态的切换组件&ndash;&gt;
+        <compoment :is="ddd"></compoment>
+    </div>
+
+   <template id="a">
+       <h2>这个是A组件</h2>
+   </template>
+
+   <template id="b">
+       <h2>这个是B组件</h2>
+   </template>-->
+
+  <!-- <div id="app2">
+       <parent></parent>
+   </div>
+
+   <template id="parent">
+       <h2>{{title}}&ndash;&gt;{{parentMsg}} &ndash;&gt;({{parentInfo}}) <child :parent-title="title" :pmsg="parentMsg" :pinfo="parentInfo" ></child></h2>
+   </template>
+
+   <template id="child">
+       <h6 style="margin-left: 100px;"> {{msg}} &ndash;&gt;{{parent-title}} ,{{pmsg}} ,{{pinfo}}</h6>
+   </template>
+-->
+
+   <div id="app3">
+       <parent></parent>
+   </div>
+
+   <template id="parent1">
+       <h2 >{{title}}-->{{parentMsg}} --({{parentInfo}})--{{childInp}} <child  @childmsg="get" :ctitle="title" :par-msg="parentMsg" :p_info="parentInfo"></child></h2>
+   </template>
+
+   <template id="child1">
+       <div>
+           <h3>父组件的信息:{{ctitle}}-->{{parMsg}}-->{{p_info}}</h3>
+           <input v-model="sendInp">
+           <input type="button" @click="send" value="发送">
+        </div>
+    </template>
+
+
+
+<!--在template中只能有一个root标签,所有的内容都在这个标签下,不能出现两个订层平级的标签-->
+<template id="global">
+    <div>
+        <h1>welcome to here,my name is {{name}}.this is <span v-if="type">global</span><span v-if="!type">sub</span> components </h1>
+        <ul>
+            <li v-for="ff in myData">
+                <a href="#">{{ff.name}}</a>
+            </li>
+        </ul>
+    </div>
+</template>
+
+
+<script type="text/javascript">
+
+    //全局组件
+    Vue.component('global',{
+        template:"#global",
+        data:function () {
+          return {
+              "type":false,
+              "name":"benjobs",
+              "myData":[
+                  {"name":"apple","price":5},
+                  {"name":"orange","price":3},
+                  {"name":"banana","price":4}
+              ]
+          }
+        }
+    });
+
+    new Vue({
+        el: "#rootApp"
+    });
+
+    //局部组件
+    new Vue({
+        el: "#app",
+        components:{
+            "subcompo":{
+                template:"#global",
+                data:function () {
+                    return {
+                        "type":false,
+                        "name": "benjobs",
+                        "myData": [
+                            {"name": "apple", "price": 5},
+                            {"name": "orange", "price": 3},
+                            {"name": "banana", "price": 4}
+                        ]
+
+                    }
+                }
+            }
+        }
+    });
+
+    //动态组件
+    new Vue({
+        el:"#app1",
+        data:{
+            ddd:""
+        },
+        components:{
+            compoA:{
+                template:"#a"
+            },
+            compoB:{
+                template:"#b"
+            }
+        }
+    });
+
+
+    //父子组件
+    new Vue({
+        el:"#app2",
+        components:{
+            parent:{
+                template:"#parent",
+                data:function () {
+                    return {
+                        "title":"父子组件",
+                        "parentMsg":"我是父组件",
+                        "parentInfo":"主要演示父子组件怎么使用的"
+                    }
+                },
+                components:{
+                    child:{
+                        props:['parent-title','pmsg','pinfo'],
+                        data:function () {
+                            return {"msg":"我是子组件"}
+                        },
+                        template:"#child"
+                    }
+                }
+            }
+        }
+    });
+
+    new Vue({
+        el:"#app3",
+        components:{
+            parent:{
+                data:function () {
+                    return {
+                        "childInp":"",
+                        "title":"父子组件",
+                        "parentMsg":"我是父组件",
+                        "parentInfo":"主要演示父子组件怎么使用的"
+                    }
+                },
+                template:"#parent1",
+                methods:{
+                    get:function (d) {
+                        this.childInp = d;
+                    }
+                },
+                components:{
+                    child:{
+                        data:function(){
+                           return {"sendInp":""}
+                        },
+                        props:{
+                            "ctitle":String,
+                            "parMsg":String,
+                            "p_info":String
+                        },
+                        template:"#child1",
+                        methods:{
+                            send:function () {
+                                //将子组件的数据发送给父组件
+                                this.$emit('childmsg',this.sendInp);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+</script>
+
+<style>
+    .tip {
+        color: RED;
+    }
+
+    .textarea {
+        width: 400px;
+        height: 200px;
+    }
+</style>
+</body>
+
+</html>

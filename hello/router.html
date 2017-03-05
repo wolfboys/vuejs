@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="libs/vue.js"></script>
+    <script src="libs/vue-router.js"></script>
+</head>
+
+<body>
+
+<div id="app">
+  <ul>
+      <li>
+          <!-- 使用 router-link 组件来导航. -->
+          <!-- 通过传入 `to` 属性指定链接. -->
+          <!-- <router-link> 默认会被渲染成一个 `<a>` 标签 -->
+          <router-link :to="{name:'home'}">首页</router-link>
+          <router-link :to="{name:'news'}">新闻</router-link>
+          <router-link :to="{name:'about'}">关于</router-link>
+      </li>
+  </ul>
+    <!-- 路由出口 -->
+    <!-- 路由匹配到的组件将渲染在这里 -->
+    <router-view></router-view>
+</div>
+
+<template id="home">
+    <div>这是一个首页</div>
+</template>
+
+<template id="news">
+    <div>
+        <ul>
+            <li><router-link :to="{name:'sport'}">体育新闻</router-link></li>
+            <li><router-link :to="{name:'history'}">历史新闻</router-link></li>
+            <li><router-link :to="{name:'money'}">财经新闻</router-link></li>
+        </ul>
+        <router-view></router-view>
+    </div>
+</template>
+
+<template id="about">
+    <div>关于我们</div>
+</template>
+
+<template id="sport">
+    <div>
+        <div>这是体育新闻</div>
+        <ul>
+            <li v-for="n in sportNews"><router-link :to="{name:'detail',params:{id:n.id}}">{{n.title}}</router-link></li>
+        </ul>
+    </div>
+</template>
+
+<template id="history">
+    <div>这是历史新闻</div>
+</template>
+
+
+<template id="money">
+    <div>这是财经新闻</div>
+</template>
+
+
+<template id="detail">
+    <div>{{text}}</div>
+</template>
+
+
+<script type="text/javascript">
+
+    // 0. 如果使用模块化机制编程，導入Vue和VueRouter，要调用 Vue.use(VueRouter)
+    // 1. 定义（路由）组件。
+    // 可以从其他文件 import 进来
+   var Home = Vue.component('home',{
+        template: '#home'
+    });
+
+    var News = { template: '#news' }
+
+    var About = { template: '#about' }
+
+    var Sport = { template: '#sport',data:function () {
+        return {
+            sportNews:[
+                {id:1,title:"中国足球赢了"},
+                {id:2,title:"C罗性丑闻"},
+                {id:3,title:"梅西又怀二胎啦"}
+            ]
+        }
+    } }
+
+    var History = { template: '#history' };
+
+    var Money = { template: '#money' };
+
+    var Detail = { template: '#detail',
+        data:function () {
+          return {"text":""}
+        },
+        mounted:function () {
+            var id = this.$route.params.id;
+            if(id==1){
+                this.text = "中国足球赢了中国足球赢了中国足球赢了中国足球赢了中国足球赢了"
+            }else if(id==2){
+                this.text = "C罗性丑闻C罗性丑闻C罗性丑闻C罗性丑闻C罗性丑闻"
+            }
+        }
+    };
+
+    // 3. 创建 router 实例，然后传 `routes` 配置
+    // 你还可以传别的配置参数, 不过先这么简单着吧。
+    var router = new VueRouter({
+        routes:[
+            { name:'home',path: '/home', component: Home},
+            { name:'news',path: '/news', component:News,children:[
+                {name:'sport',path: 'sport', component: Sport},
+                {name:'history',path: 'history', component: History},
+                {name:'money',path: 'money', component: Money},
+                {name:'detail',path: 'detail/:id', component: Detail}
+            ]},
+            { name:'about', path: '/about', component: About }
+        ]
+    });
+
+    // 4. 创建和挂载根实例。
+    // 记得要通过 router 配置参数注入路由，
+    // 从而让整个应用都有路由功能
+    var app = new Vue({
+        el:"#app",
+        router:router
+    });
+</script>
+
+<style>
+    .tip {
+        color: RED;
+    }
+
+    .textarea {
+        width: 400px;
+        height: 200px;
+    }
+</style>
+</body>
+
+</html>

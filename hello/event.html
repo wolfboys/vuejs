@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="libs/vue.js"></script>
+</head>
+
+<body>
+<div id="app">
+  <div @click="show3()">
+    <!--阻止事件冒泡1-->
+    <button @click.stop="show1()">click1</button>
+    <!--阻止事件冒泡2-->
+    <button @click="show2($event)">click2</button>
+  </div>
+  <!--阻止默认行为1-->
+  <button @contextmenu.prevent="menu()">邮件菜单</button>
+  <!--阻止默认行为2-->
+  <button @contextmenu="menu1($event)">邮件菜单1</button>
+
+  <!--键盘事件-->
+  <input type="text" @keydown="down($event)">
+
+  <!--键盘事件,针对常用的键Enter-->
+  <input type="text" @keyup.enter="keyup($event)">
+  <input type="text" @keyup.up="keyup($event)">
+  <input type="text" @keyup.down="keyup($event)">
+  <input type="text" @keyup.left="keyup($event)">
+  <input type="text" @keyup.right="keyup($event)">
+
+
+  <pre>
+    {{$data|json}}
+  </pre>
+</div>
+
+<script type="text/javascript">
+  new Vue({
+    el: "#app",
+    data:
+    {
+      message:"",
+      count:1,
+      notNull: "要提交的内容不能为空,请输入内容再提交",
+      tip:{
+        fontSize:"14px",
+        fontWeight:400,
+        color:"RED"
+      },
+      input:"textarea"
+    },
+    methods:{
+      show1:function () {
+        alert(1);
+      },
+
+      show2:function (e) {
+        alert(2);
+        //阻止事件冒泡
+        e.stopPropagation();
+      },
+
+      show3:function () {
+        alert(3);
+      },
+      menu:function () {
+        alert("menu")
+      },
+      menu1:function (e) {
+        alert("menu");
+        e.preventDefault();
+      },
+      down:function (e) {
+        alert(e.keyCode);
+      },
+      keyup:function () {
+        alert("Enter...")
+      }
+    }
+  });
+</script>
+
+<style>
+  .tip{
+    color: RED;
+  }
+  .textarea{
+    width: 400px;
+    height: 200px;
+  }
+</style>
+
+</body>
+
+</html>

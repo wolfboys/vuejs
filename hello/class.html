@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="libs/vue.js"></script>
+  <title>Class与Style绑定</title>
+  <style type="text/css">
+    .redSty{
+      color: red;
+    }
+    .fontSty{
+      font-size: 18px;
+    }
+
+    .weight {
+      font-weight:700;
+    }
+  </style>
+</head>
+
+<body>
+<h2>绑定Html Class</h2>
+<p>尽管可以用 Mustache 标签绑定 class，比如 class="{{ className }}"，但是不推荐这种写法和 :class 混用。两者只能选其一！</p>
+<div id="app">
+  <div :class="red">红色</div> <!--单一属性-->
+  <div :class="[red]">红色</div><!--多个属性-->
+  <div :class="[red,font]">红色</div><!--多个属性-->
+  <div :class="[red,font,{weight:isWeight}]">红色</div><!--多个属性-->
+  <div :class="json">红色</div><!--json-->
+  <div>{{12|currency '$'}}</div>
+</div>
+ 
+<hr />
+
+<script>
+  new Vue({
+    el: "#app",
+    data: {
+      red:'redSty',
+      font:"fontSty",
+      isWeight:true,
+      json:{
+        redSty:true,
+        weight:true
+      },
+      welcome:"WELCOME to vuejs"
+    }
+  });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="libs/vue.js"></script>
+  <script type="text/javascript">
+    window.onload = function () {
+      new Vue({
+        el: "#app",//放选择器..
+        data: {
+          message: "hello world",
+          error:"red",
+          textarea:"textarea"
+        }
+      });
+
+      new Vue({
+        el: '#app-2',
+        data: {
+          message: '你页面加载的时间是' + new Date()
+        }
+      });
+
+      new Vue({
+        el: '#app-3',
+        data: {
+          see: true,
+          show:false
+        }
+      });
+
+      var app4 = new Vue({
+        el: '#app-4',
+        data: {
+          todos: [
+            { text: 'Learn JavaScript' },
+            { text: 'Learn Vue' },
+            { text: 'Build something awesome' }
+          ],
+          json:{a:"apple",b:"orange",c:"banana"}
+        }
+      });
+      //给元素追加内容...
+      app4.todos.push({ text: 'New item' });
+
+      //添加事件绑定
+      new Vue({
+        el: '#app-5',
+        data: {
+          message: 'Hello Vue.js!'
+        },
+        methods: {
+          reverse: function () {
+            this.message = this.message.split('').reverse().join('');
+          },
+          showMsg:function () {
+            alert(this.message);
+          }
+        }
+      });
+
+      var app6 = new Vue({
+        el:"#app-6",
+        data:{
+          useRed:true,
+          lighter:true,
+          useSize:true,
+          size:18,
+          id:"19890214",
+          name:"benjobs",
+          class1:"size18",
+          class2:"lighter",
+          style1:{
+            fontSize:"20px",
+            color:"blue"
+          },
+          style2:{
+            fontWeight:"bold"
+          }
+        }
+      });
+
+
+    }
+  </script>
+
+  <style>
+    .red{
+      color: RED;
+    }
+    .size18{
+      font-size: 18px;
+    }
+
+    .lighter{
+      font-weight: lighter;
+    }
+
+    .textarea{
+      width: 400px;
+      height: 200px;
+    }
+  </style>
+
+</head>
+
+<body>
+<div id="app">
+  <!--显示和绑定内容-->
+  <p>{{message}}</p>
+  <p>{{*message}}</p><!--数据值绑定一次-->
+  <p>{{{message}}}</p><!--数据原始输出-->
+  <div :class="error" v-if="!message">You must enter a message to submit!</div>
+  <textarea :class="textarea" v-model="message"></textarea>
+  <button v-show="message">submit</button>
+
+  <pre>
+    {{$data|json}}
+  </pre>
+</div>
+<div id="app-2">
+  <!--改变元素的属性-->
+  <span v-bind:title="message">
+    把光标放到这里来,查看显示的标题时间!
+  </span>
+</div>
+
+<div id="app-3">
+  <!-- v-if根据条件控制输出,如果条件不满足,则标签控制内的内容不会输出html-->
+  <p v-if="see">Now you see me</p>
+  <!--v-show根据条件控制元素是否显示,如果条件为false,则display置为none,于v-if不同,它会输出html内容-->
+  <p v-show="show">Now you see me2</p>
+</div>
+
+<!--循环遍历-->
+<div id="app-4">
+  <ol>
+    <li v-for="(todo,index,d) in todos">
+      {{ todo.text }} {{index}}
+    </li>
+    <br/>
+    <li v-for="(v,k,i) in json">
+      {{k}}:{{v}}:{{i}}
+    </li>
+  </ol>
+</div>
+
+<!--模板指令 v-on -->
+<div id="app-5">
+  <p>{{ message }}</p>
+  <!--v-on:click和@click等价-->
+  <button v-on:click="reverse">Reverse this</button>
+  <button @click="showMsg">alert this</button>
+</div>
+
+<!--模板指令 v-bind -->
+<div id="app-6">
+
+  <!-- 绑定 attribute -->
+  <img v-bind:src="imageSrc">
+  <!-- 缩写 :属性名 -->
+  <img :src="imageSrc">
+
+  <!-- 绑定 class -->
+  <p :class="{red:useRed}">class="{red:useRed}":如果属性的一个K:V键值对,则K为在style里定义好的样式,V为boolean值,控制是否使用K定义的样式</p>
+
+  <p :class="[class1,class2]">[class1,class2]:如果属性为字符串,则会动态的获取这个字符串对应的变量的样式</p>
+
+  <p :class="[class1, {red:useRed,lighter:lighter}]">[class1, {red:useRed,lighter:lighter}]上面两者组合使用</p>
+
+  <!-- 绑定 style -->
+  <div :style="{ fontSize: size + 'px' }">绑定style Demo!</div>
+  <div :style="[style1,style2]">绑定style Demo2!</div>
+
+  <!-- 绑定到一个对象 -->
+  <div v-bind="{ id: id, name: name }"></div>
+
+</div>
+
+</body>
+
+</html>

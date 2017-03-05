@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<!--基本组件-->
+    <div id="app">
+        <dandan></dandan>
+        <jie></jie>
+    </div>
+    <template id="dan">
+        <div>hi{{name}}</div>
+    </template>
+
+    <template id="hj">
+        <div>
+            hi{{name}} 今年{{age}},工作是{{job}}
+        </div>
+    </template>
+    <!--动态组件-->
+    <div id="app2">
+        <input type="button" @click="show='showa'" value="点击显示a" />
+        <input type="button" @click="show='showb'" value="点击显示b" />
+        <component :is="show"></component>
+    </div>
+    <template id="a">
+        <div>你好，我是 a</div>
+    </template>
+    <template id="b">
+        <div>你好，我是 b</div>
+    </template>
+    <!--子取父-->
+    <div id="app3">
+        <parent></parent>
+    </div>
+    <template id="parent">
+        <div>在{{where}},有{{weather}}<child :where="where" :weather="weather"></child></div>
+    </template>
+    <template id="child">
+        <div>{{date}}--{{where}}--{{weather}}</div>
+    </template>
+
+
+
+    <!--fu取zi-->
+    <div id="app4">
+        <parent1></parent1>
+    </div>
+    <template id="parent1">
+        <div>我的梦想{{dream}},我的偶像是{{ioo}}  <child1 @msg="get"></child1></div>
+    </template>
+
+    <template id="child1">
+        <div>我的子组件,{{ido}}</div>
+    </template>
+
+
+
+
+
+</body>
+<script src="vue.js"></script>
+<script>
+    Vue.component("dandan",{
+            template:"#dan",
+            data:function(){
+                return {
+                    name:"json"
+                }
+            }
+        }
+    )
+    //局部组件
+    new Vue({
+        el:"#app",
+        components:{
+            "dan":{
+                template:"<h1>要好好学习</h1>"
+            },
+            "jie":{
+                template:"#hj",
+                data:function () {
+                    return {
+                        name:"华杰",
+                        age:"28",
+                        job:"屌丝敲代码"
+                    }
+                }
+            }
+        },
+        data:{
+        },
+        methods:{
+
+        }
+
+    })
+
+    //动态组件
+    new Vue({
+        el:"#app2",
+        components:{
+            "showa":{
+                template:"#a"
+            },
+            "showb":{
+                template:"#b"
+            }
+        },
+        data:{
+            "show":''
+        }
+    })
+    //父子组件
+    new Vue({
+        el:"#app3",
+        data:{
+
+        },
+        components:{
+            "parent":{
+                template:"#parent",
+                data:function () {
+                    return{
+                        "weather":"雾霾",
+                        "where":"北京"
+                    }
+                },
+                components:{
+                    "child":{
+                        template:"#child",
+                        props:["where","weather"],
+                        data:function () {
+                            return {
+                                "date":"2017/3/4"
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    })
+    //父取子
+    new Vue({
+        el:"#app4",
+        data:{
+
+        },
+        components:{
+            "parent1":{
+                template:"#parent1",
+                data:function () {
+                    return {
+                        "dream":"好好学习",
+                        "ioo":""
+                    }
+                },
+                methods:{
+                    get:function (msg) {
+                        this.ioo=msg;
+                    }
+                },
+                components:{
+                    "child1":{
+                        template:"#child1",
+                        data:function () {
+                            return {
+                               "ido":"周杰伦"
+                            }
+                        },
+                        mounted:function () {
+                            this.getmsg();
+                        },
+                        methods:{
+                            getmsg:function(){
+                                this.$emit("msg",this.ido);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    })
+</script>
+</html>
+
